@@ -3,4 +3,4 @@
 # scratch without using any cached layers. This can be useful if you have made changes to the Dockerfile or
 # if you want to ensure that you are using the latest versions of the base images and dependencies.
 docker build -t docker-spring  . --no-cache
-docker-compose up -ḍ
+docker-compose up -d
