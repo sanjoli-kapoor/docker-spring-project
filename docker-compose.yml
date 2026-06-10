@@ -18,7 +18,7 @@ services:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-pspringpass"]
       interval: 10s
       timeout: 5s
-      retries: 10
+      retries: 5
   app:
     container_name: "app"
     image: docker-spring
@@ -31,6 +31,6 @@ services:
         condition: service_started
 
 
-#networks:
-#  bridge:
-#    driver: bridge
+networks:
+ bridge:
+   driver: bridge
