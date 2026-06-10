@@ -1,0 +1,49 @@
+# docker-spring-project
+
+Spring Boot 3.4.9 REST API that bulk-imports a CSV of baseball players into MySQL using multi-threaded batch processing. Runs as a 3-container Docker stack (app, MySQL, Redis).
+
+## Build
+
+```bash
+./mvnw clean package          # build JAR (target/docker-spring.jar)
+./mvnw test                   # run unit tests only
+```
+
+## Running containers
+
+```bash
+./bring-up.sh                 # build image + docker-compose up -d
+./bring-down.sh               # docker-compose down + remove image
+```
+
+All three containers must be running before hitting any API endpoint.
+
+## API
+
+```
+POST http://localhost:8080/api/person/import?filePath=/home/app/People.csv
+```
+
+`People.csv` is baked into the Docker image at `/home/app/People.csv`.
+
+## Git workflow
+
+- Commit message format: `<type>: <short description>` — e.g. `feat: add health check`, `fix: null pointer in csv parser`, `ci: update pipeline`
+- Always run `./mvnw test` before committing. Do not commit if tests fail.
+- After committing, push to the current branch with `git push`.
+- Never force-push to `main`.
+- PRs merge into `main`; merging triggers the CI/CD pipeline automatically.
+
+## CI/CD
+
+GitHub Actions workflow at `.github/workflows/ci-cd.yml`:
+- **test job** — runs on `ubuntu-latest` (GitHub-hosted, free). Sets up Java 17 and runs `./mvnw test`.
+- **deploy job** — runs on `self-hosted` (this Mac). Builds JAR + Docker image, restarts containers, polls `/actuator/health` until `"status":"UP"`.
+
+The deploy job requires a GitHub Actions self-hosted runner to be running on this Mac.
+
+## Docker
+
+- App image: `docker-spring` (built locally from `Dockerfile`)
+- MySQL healthcheck gates app startup — app will not start until MySQL is ready
+- Redis is wired in as a dependency but not yet used in application logic

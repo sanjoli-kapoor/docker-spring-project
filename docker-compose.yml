@@ -14,16 +14,23 @@ services:
       MYSQL_DATABASE: project_people
     ports:
       - 3306:3306
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-pspringpass"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
   app:
     container_name: "app"
     image: docker-spring
     ports:
       - 8080:8080
     depends_on:
-      - db
-      - redis
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
 
 
-#networks:
-#  bridge:
-#    driver: bridge
+networks:
+ bridge:
+   driver: bridge
