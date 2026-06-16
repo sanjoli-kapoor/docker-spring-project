@@ -4,6 +4,7 @@ import com.sanjoli.entity.Person;
 import com.sanjoli.PersonRepository;
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvException;
+import jakarta.annotation.PreDestroy;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -93,6 +94,11 @@ public class CsvImportService {
         } catch (NumberFormatException e) {
             return null;
         }
+    }
+
+    @PreDestroy
+    public void shutdown() {
+        executor.shutdown();
     }
 }
 

@@ -40,7 +40,9 @@ GitHub Actions workflow at `.github/workflows/ci-cd.yml`:
 - **test job** — runs on `ubuntu-latest` (GitHub-hosted, free). Sets up Java 17 and runs `./mvnw test`.
 - **deploy job** — runs on `self-hosted` (this Mac). Builds JAR + Docker image, restarts containers, polls `/actuator/health` until `"status":"UP"`.
 
-The deploy job requires a GitHub Actions self-hosted runner to be running on this Mac.
+
+
+
 
 ## Docker
 
