@@ -4,7 +4,10 @@
       "Bash(./bring-up.sh)",
       "Bash(./bring-down.sh)",
       "Bash(curl -s -o /dev/null -w *)",
-      "Bash(curl -s http://localhost:8080/actuator/health*)"
+      "Bash(curl -s http://localhost:8080/actuator/health*)",
+      "Bash(ls *)",
+      "Bash(cat *)",
+      "Bash(pwd)"
     ]
   }
 }
