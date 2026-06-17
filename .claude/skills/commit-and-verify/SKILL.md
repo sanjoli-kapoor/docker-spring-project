@@ -1,13 +1,13 @@
 ---
 name: commit-and-verify
-description: Build a new Docker image, bring up containers, verify the import API returns 200 OK, then stage selected files, commit, and push the current feature branch. Use when the user wants to verify and commit changes.
+description: To commit changes. Builds a new Docker image, bring up containers, run unit and integration test, commit, and push the current feature branch.
 disable-model-invocation: false
 tools: Bash, AskUserQuestion
 ---
 
-# Commit and Verify
+# Overview
 
-End-to-end workflow: build → bring up → verify API → stage → commit → push.
+This skill will build new image, brings up containers, stage files for commit, and push the current branch.
 
 ## Steps
 
@@ -16,10 +16,16 @@ End-to-end workflow: build → bring up → verify API → stage → commit → 
 ```bash
 ./bring-down.sh
 ```
-
 No permission needed for container operations.
 
-### 2. Build image and bring up containers
+### 2. Build new jar
+
+```bash
+./mvnw clean package -DskipTests
+```
+If build fails, report the failure and stop — do not proceed to next step.
+
+### 3. Build image and bring up containers
 
 ```bash
 ./bring-up.sh
@@ -27,7 +33,7 @@ No permission needed for container operations.
 
 No permission needed. Wait for it to complete.
 
-### 3. Wait for the app to be healthy
+### 4. Wait for the app to be healthy
 
 Poll `/actuator/health` until `"status":"UP"` or until 60 seconds have elapsed:
 
@@ -42,42 +48,47 @@ done
 
 If the app never comes up, report the failure and stop — do not proceed to commit.
 
-### 4. Make the POST request to the import endpoint
-
-No permission needed for this request.
+### 5. Run unit and integration tests
 
 ```bash
-curl -s -o /dev/null -w "%{http_code}" -X POST \
-  "http://localhost:8080/api/person/import?filePath=/home/app/People.csv"
+# Run unit tests
+./mvnw test
+
+# Run integration tests (Cucumber)
+./mvnw verify
 ```
 
-- If HTTP status is `200` → proceed.
-- If anything else → report the status code and the response body, then stop. Do not commit.
+- If any tests fail, report the failure and stop — do not proceed to commit.
+- If all tests pass, proceed to step 5.
 
-### 5. Ask the user which files to stage
+
+### 6. Ask the user which files to stage
 
 Show the output of `git status` and ask the user to confirm which files should be staged. Wait for their answer before proceeding.
 
-### 6. Stage the confirmed files
+### 7. Stage the confirmed files
 
 Stage only the files the user approved.
 
-### 7. Ask the user for a commit message
+### 8. Ask the user for a commit message
 
 Suggest one following the project convention `<type>: <short description>` based on the staged changes, but let the user override it.
 
-### 8. Commit
+### 9. Commit
 
 ```bash
-git commit -m "<message>
-
-Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>"
+git commit -m "<message>"
 ```
+### 10. Pull the latest changes from the main branch
 
-### 9. Push the current branch
+```bash
+git pull --rebase origin main
+git status
+```
+confirm with the user before proceeding. If there are conflicts, report them and stop — do not proceed to push.
+### 11. Push the current branch
 
 ```bash
 git push
 ```
-
 Report the push result to the user.
