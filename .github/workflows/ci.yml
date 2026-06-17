@@ -20,6 +20,9 @@ jobs:
           distribution: 'temurin'
           cache: maven
 
+      - name: Run Checkstyle
+        run: ./mvnw checkstyle:check
+
       - name: Build with Maven
         run: mvn -B clean package --file pom.xml
 

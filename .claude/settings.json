@@ -9,5 +9,18 @@
       "Bash(cat *)",
       "Bash(pwd)"
     ]
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash scripts/checkstyle-hook.sh"
+          }
+        ]
+      }
+    ]
   }
 }
