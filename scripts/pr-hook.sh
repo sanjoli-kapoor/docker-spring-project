@@ -34,8 +34,9 @@ if [[ "$BRANCH" == "main" || "$BRANCH" == "master" ]]; then
     exit 0
 fi
 
-# Skip if a PR already exists for this branch
-if gh pr view "$BRANCH" > /dev/null 2>&1; then
+# Skip if an OPEN PR already exists for this branch
+PR_STATE=$(gh pr view "$BRANCH" --json state -q '.state' 2>/dev/null)
+if [[ "$PR_STATE" == "OPEN" ]]; then
     exit 0
 fi
 
