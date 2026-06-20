@@ -21,8 +21,8 @@ public class CsvImportService {
 
     private final PersonRepository personRepository;
 
-    private final int BATCH_SIZE = 500;
-    private final int THREAD_COUNT = 6;
+    private static final int BATCH_SIZE = 500;
+    private static final int THREAD_COUNT = 6;
 
     private final ExecutorService executor = Executors.newFixedThreadPool(THREAD_COUNT);
 

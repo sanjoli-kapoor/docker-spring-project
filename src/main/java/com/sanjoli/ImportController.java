@@ -3,7 +3,10 @@ package com.sanjoli;
 import com.opencsv.exceptions.CsvException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
@@ -21,7 +24,7 @@ public class ImportController {
             csvService.importCsv(filePath);
             return ResponseEntity.ok("CSV import completed successfully");
         } catch (IOException | CsvException | InterruptedException | ExecutionException e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
             return ResponseEntity.status(500).body("CSV import failed: " + e.getMessage());
         }
     }
