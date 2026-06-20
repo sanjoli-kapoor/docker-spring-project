@@ -13,7 +13,10 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.*;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 @Service
 @RequiredArgsConstructor
@@ -21,8 +24,8 @@ public class CsvImportService {
 
     private final PersonRepository personRepository;
 
-    private final int BATCH_SIZE = 500;
-    private final int THREAD_COUNT = 6;
+    private static final int BATCH_SIZE = 500;
+    private static final int THREAD_COUNT = 6;
 
     private final ExecutorService executor = Executors.newFixedThreadPool(THREAD_COUNT);
 

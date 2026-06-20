@@ -1,5 +1,5 @@
 FROM eclipse-temurin:17
-#ENV REDIS_USER=XXX MONGO_PA SS=XXX
+
 RUN mkdir -p /home/app
 COPY ./People.csv /home/app
 ADD target/docker-spring.jar docker-spring.jar
